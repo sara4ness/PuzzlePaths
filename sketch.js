@@ -7,10 +7,16 @@ let rectY = 100;
 let pieceX = 100;
 let pieceY = 100;
 
+let pieceW = 100;
+let pieceQ = 100;
+
 function setup() {
   createCanvas(1400, 800);
   pieceX = random(100, 600);
   pieceY = random(100, 600);
+
+  pieceW = random(100, 600);
+  pieceQ = random(100, 600);
 }
 
 function draw() {
@@ -26,7 +32,7 @@ function draw() {
     }
   }
 
-  // the square that makrs the space of the grid
+  // the square that marks the space of the grid
   fill(0);
   noStroke();
   rect(rectX, rectY, colSize, rowSize);
@@ -53,6 +59,9 @@ function draw() {
   fill('green');
   rect(pieceX, pieceY, colSize, rowSize);
 
+  // second puzzle piece
+  fill('blue');
+  rect(pieceW, pieceQ, colSize, rowSize);
 
 }
 
@@ -66,5 +75,9 @@ function keyReleased () {
     if (keyCode == 65) {
       pieceX = rectX;
       pieceY = rectY;
+    }
+    if (keyCode == 83) {
+      pieceW = rectX;
+      pieceQ = rectY;
     }
 }
