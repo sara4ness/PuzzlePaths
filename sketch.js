@@ -11,8 +11,12 @@ let port;
 let connectBtn;
 let myVal = 0;
 
+let solvedBtn;
+
+let myCanvas, savedImg;
+
 function setup() {
-  createCanvas(1400, 800);
+  myCanvas = createCanvas(1120, 600);
 
   //Connect button for Arduino
   port = createSerial();
@@ -21,11 +25,17 @@ function setup() {
   connectBtn.position(20, 20);
   connectBtn.mousePressed(connectBtnClick);
 
+  //create button for when solved
+  solvedBtn = createButton('Finished!');
+  solvedBtn.size(80, 20)
+  solvedBtn.position(width - 100, height - 40);
+  solvedBtn.mousePressed(solvedBtnClick);
+
   //making puzzzle pieces and giving them random positions
 for (let i = 0; i < 9; i++) {
     pieces[i] = new Piece();
-    pieces[i].x = random(100, 600);
-    pieces[i].y = random(100, 600);
+    pieces[i].x = random(100, 400);
+    pieces[i].y = random(100, 400);
     pieces[i].r = random(255);
     pieces[i].g = random(255);
     pieces[i].b = random(255);
@@ -38,7 +48,7 @@ function draw() {
    // puzzle grid
    for (let i = 0; i < columns; i++) {
     for (let j = 0; j < rows; j++) {
-      stroke('red')
+      stroke(255)
       strokeWeight(4);
       fill(255)
       rect(800 + i * colSize, 100 + j * rowSize, colSize, rowSize);
@@ -73,41 +83,25 @@ function draw() {
     pieces[i].show();
   }
 
-  //arduino test
+  //arduino connection
   let val = port.readUntil("\n"); //read each line
   if (val.length > 0) {
-    myVal = val; // Update circle size with new value
-    print(myVal);
+    myVal = val; // Update with new value
+    print(myVal); //see if value is coming through
 
-    if (myVal == 1) {
-      pieces[1].x = rectX;
-      pieces[1].y = rectY;
-    } else if (myVal == 2) {
-      pieces[2].x = rectX;
-      pieces[2].y = rectY;
-    } else if (myVal == 3) {
-      pieces[3].x = rectX;
-      pieces[3].y = rectY;
-    } else if (myVal == 4) {
-      pieces[4].x = rectX;
-      pieces[4].y = rectY;
-    } else if (myVal == 5) {
-      pieces[5].x = rectX;
-      pieces[5].y = rectY;
-    } else if (myVal == 6) {
-      pieces[6].x = rectX;
-      pieces[6].y = rectY;
-    } else if (myVal == 7) {
-      pieces[7].x = rectX;
-      pieces[7].y = rectY;
-    } else if (myVal == 8) {
-      pieces[8].x = rectX;
-      pieces[8].y = rectY;
-    } else if (myVal == 0) {
-      pieces[0].x = rectX;
-      pieces[0].y = rectY;
+    for(let pieceX = 0; pieceX < pieces.length; pieceX++) {
+      if (myVal == pieceX) {
+        pieces[pieceX].x = rectX;
+        pieces[pieceX].y = rectY;
+      } else if (myVal == 9) {
+        pieces[pieceX].x = random(100, 400);
+        pieces[pieceX].y = random(100, 400);
+      }
     }
 
+
+
+    // cursor moving
     if(myVal == 10) {
       rectX += colSize;
     } else if(myVal == 11) {
@@ -134,55 +128,15 @@ class Piece {
   }
 }
 
-// function keyReleased () {
-//   if(keyCode == 50) {
-//     rectX += colSize;
-//   } else if(keyCode == 49) {
-//     rectX -= colSize;
-//   }
-
-//   if (myVal == 0) {
-//     pieces[1].x = rectX;
-//     pieces[1].y = rectY;
-//   }
-//   if (keyCode == 83) {
-//     pieces[2].x = rectX;
-//     pieces[2].y = rectY;
-//   }
-//   if (keyCode == 68) {
-//     pieces[3].x = rectX;
-//     pieces[3].y = rectY;
-//   }
-//   if (keyCode == 70) {
-//     pieces[4].x = rectX;
-//     pieces[4].y = rectY;
-//   }
-//   if (keyCode == 71) {
-//     pieces[5].x = rectX;
-//     pieces[5].y = rectY;
-//   }
-//   if (keyCode == 72) {
-//     pieces[6].x = rectX;
-//     pieces[6].y = rectY;
-//   }
-//   if (keyCode == 74) {
-//     pieces[7].x = rectX;
-//     pieces[7].y = rectY;
-//   }
-//   if (keyCode == 75) {
-//     pieces[8].x = rectX;
-//     pieces[8].y = rectY;
-//   }
-//   if (keyCode == 76) {
-//     pieces[0].x = rectX;
-//     pieces[0].y = rectY;
-//   }
-// }
-
 function connectBtnClick() {
   if (!port.opened()) {
     port.open('Arduino', 9600);
   } else {
     port.close();
   }
+}
+
+function solvedBtnClick() {
+  savedImg = myCanvas.get(780, 80, 1020, 340);
+  savedImg.save('my-painting', 'png');
 }
