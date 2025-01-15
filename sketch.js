@@ -1,3 +1,10 @@
+<<<<<<< Updated upstream
+=======
+let pieces = [];
+
+let check = false;
+
+>>>>>>> Stashed changes
 let columns = 3; let rows = 3;
 let colSize = 100; let rowSize = 100; 
 
