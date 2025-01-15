@@ -6,8 +6,20 @@ let colSize = 100; let rowSize = 100;
 let rectX = 800;
 let rectY = 100;
 
+//Arduino connection variables
+let port; 
+let connectBtn;
+let myVal = 0;
+
 function setup() {
   createCanvas(1400, 800);
+
+  //Connect button for Arduino
+  port = createSerial();
+
+  connectBtn = createButton('Connect to Arduino');
+  connectBtn.position(20, 20);
+  connectBtn.mousePressed(connectBtnClick);
 
   //making puzzzle pieces and giving them random positions
 for (let i = 0; i < 9; i++) {
@@ -60,6 +72,49 @@ function draw() {
   for(let i = 0; i < pieces.length; i++) {
     pieces[i].show();
   }
+
+  //arduino test
+  let val = port.readUntil("\n"); //read each line
+  if (val.length > 0) {
+    myVal = val; // Update circle size with new value
+    print(myVal);
+
+    if (myVal == 1) {
+      pieces[1].x = rectX;
+      pieces[1].y = rectY;
+    } else if (myVal == 2) {
+      pieces[2].x = rectX;
+      pieces[2].y = rectY;
+    } else if (myVal == 3) {
+      pieces[3].x = rectX;
+      pieces[3].y = rectY;
+    } else if (myVal == 4) {
+      pieces[4].x = rectX;
+      pieces[4].y = rectY;
+    } else if (myVal == 5) {
+      pieces[5].x = rectX;
+      pieces[5].y = rectY;
+    } else if (myVal == 6) {
+      pieces[6].x = rectX;
+      pieces[6].y = rectY;
+    } else if (myVal == 7) {
+      pieces[7].x = rectX;
+      pieces[7].y = rectY;
+    } else if (myVal == 8) {
+      pieces[8].x = rectX;
+      pieces[8].y = rectY;
+    } else if (myVal == 0) {
+      pieces[0].x = rectX;
+      pieces[0].y = rectY;
+    }
+
+    if(myVal == 10) {
+      rectX += colSize;
+    } else if(myVal == 11) {
+      rectX -= colSize;
+    }
+  }  
+
 }
 
 class Piece {
@@ -79,47 +134,55 @@ class Piece {
   }
 }
 
-function keyReleased () {
-  if(keyCode == 50) {
-    rectX += colSize;
-  } else if(keyCode == 49) {
-    rectX -= colSize;
-  }
+// function keyReleased () {
+//   if(keyCode == 50) {
+//     rectX += colSize;
+//   } else if(keyCode == 49) {
+//     rectX -= colSize;
+//   }
 
-  if (keyCode == 65) {
-    pieces[1].x = rectX;
-    pieces[1].y = rectY;
-  }
-  if (keyCode == 83) {
-    pieces[2].x = rectX;
-    pieces[2].y = rectY;
-  }
-  if (keyCode == 68) {
-    pieces[3].x = rectX;
-    pieces[3].y = rectY;
-  }
-  if (keyCode == 70) {
-    pieces[4].x = rectX;
-    pieces[4].y = rectY;
-  }
-  if (keyCode == 71) {
-    pieces[5].x = rectX;
-    pieces[5].y = rectY;
-  }
-  if (keyCode == 72) {
-    pieces[6].x = rectX;
-    pieces[6].y = rectY;
-  }
-  if (keyCode == 74) {
-    pieces[7].x = rectX;
-    pieces[7].y = rectY;
-  }
-  if (keyCode == 75) {
-    pieces[8].x = rectX;
-    pieces[8].y = rectY;
-  }
-  if (keyCode == 76) {
-    pieces[0].x = rectX;
-    pieces[0].y = rectY;
+//   if (myVal == 0) {
+//     pieces[1].x = rectX;
+//     pieces[1].y = rectY;
+//   }
+//   if (keyCode == 83) {
+//     pieces[2].x = rectX;
+//     pieces[2].y = rectY;
+//   }
+//   if (keyCode == 68) {
+//     pieces[3].x = rectX;
+//     pieces[3].y = rectY;
+//   }
+//   if (keyCode == 70) {
+//     pieces[4].x = rectX;
+//     pieces[4].y = rectY;
+//   }
+//   if (keyCode == 71) {
+//     pieces[5].x = rectX;
+//     pieces[5].y = rectY;
+//   }
+//   if (keyCode == 72) {
+//     pieces[6].x = rectX;
+//     pieces[6].y = rectY;
+//   }
+//   if (keyCode == 74) {
+//     pieces[7].x = rectX;
+//     pieces[7].y = rectY;
+//   }
+//   if (keyCode == 75) {
+//     pieces[8].x = rectX;
+//     pieces[8].y = rectY;
+//   }
+//   if (keyCode == 76) {
+//     pieces[0].x = rectX;
+//     pieces[0].y = rectY;
+//   }
+// }
+
+function connectBtnClick() {
+  if (!port.opened()) {
+    port.open('Arduino', 9600);
+  } else {
+    port.close();
   }
 }
