@@ -12,6 +12,8 @@ let connectBtn;
 let myVal = 0;
 
 let solvedBtn;
+let input;
+let msg;
 
 let myCanvas, savedImg;
 
@@ -22,7 +24,8 @@ function setup() {
   port = createSerial();
 
   connectBtn = createButton('Connect to Arduino');
-  connectBtn.position(20, 20);
+  connectBtn.size(80, 20);
+  connectBtn.position(20, height - 40);
   connectBtn.mousePressed(connectBtnClick);
 
   //create button for when solved
@@ -30,6 +33,10 @@ function setup() {
   solvedBtn.size(80, 20)
   solvedBtn.position(width - 100, height - 40);
   solvedBtn.mousePressed(solvedBtnClick);
+
+  //name field for saving
+  input = createInput('Name');
+  input.position(800,height - 40 )
 
   //making puzzzle pieces and giving them random positions
 for (let i = 0; i < 9; i++) {
@@ -137,6 +144,7 @@ function connectBtnClick() {
 }
 
 function solvedBtnClick() {
+  let msg = input.value();
   savedImg = myCanvas.get(780, 80, 1020, 340);
-  savedImg.save('my-painting', 'png');
+  savedImg.save(msg, 'png');
 }
