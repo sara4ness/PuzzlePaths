@@ -17,6 +17,16 @@ let msg;
 
 let myCanvas, savedImg;
 
+let mazes = [];
+
+//load images
+function preload() {
+for (let i = 0; i < 9; i++) {
+  mazes[i] = loadImage('assets/maze-0' + i + '.png');
+}
+}
+
+
 function setup() {
   myCanvas = createCanvas(1120, 600);
 
@@ -41,11 +51,12 @@ function setup() {
   //making puzzzle pieces and giving them random positions
 for (let i = 0; i < 9; i++) {
     pieces[i] = new Piece();
-    pieces[i].x = random(100, 400);
-    pieces[i].y = random(100, 400);
-    pieces[i].r = random(255);
-    pieces[i].g = random(255);
-    pieces[i].b = random(255);
+    pieces[i].maze = i;
+    pieces[i].x = random(50, 400);
+    pieces[i].y = random(50, 400);
+    // pieces[i].r = random(255);
+    // pieces[i].g = random(255);
+    // pieces[i].b = random(255);
 }
 }
 
@@ -61,7 +72,7 @@ function draw() {
       rect(800 + i * colSize, 100 + j * rowSize, colSize, rowSize);
     }
   } 
-
+  
  // the square that marks the space of the grid
   fill(0);
   noStroke();
@@ -101,12 +112,10 @@ function draw() {
         pieces[pieceX].x = rectX;
         pieces[pieceX].y = rectY;
       } else if (myVal == 9) {
-        pieces[pieceX].x = random(100, 400);
-        pieces[pieceX].y = random(100, 400);
+        pieces[pieceX].x = random(50, 400);
+        pieces[pieceX].y = random(50, 400);
       }
     }
-
-
 
     // cursor moving
     if(myVal == 10) {
@@ -119,19 +128,21 @@ function draw() {
 }
 
 class Piece {
-  constructor() {
+  constructor( ) {
     this.x = 200;
     this.y = 150;
-    this.r = 220;
-    this.g = 220;
-    this.b = 220;
+    this.maze = 0;
+    // this.r = 220;
+    // this.g = 220;
+    // this.b = 220;
   }
   show() {
     // stroke(this.r, this.g, this.b);
-    // strokeWeight(2);
-    noStroke();
-    fill(this.r, this.g, this.b);
-    rect(this.x, this.y, 100, 100);
+    // // strokeWeight(2);
+    // noStroke();
+    // fill(this.r, this.g, this.b);
+    // rect(this.x, this.y, 100, 100);
+    image(mazes[this.maze], this.x, this.y, 100, 100);
   }
 }
 
@@ -145,6 +156,6 @@ function connectBtnClick() {
 
 function solvedBtnClick() {
   let msg = input.value();
-  savedImg = myCanvas.get(780, 80, 1020, 340);
+  savedImg = myCanvas.get(780, 80, 340, 340);
   savedImg.save(msg, 'png');
 }
