@@ -3,18 +3,20 @@ let pieces = [];
 let columns = 3; let rows = 3;
 let colSize = 100; let rowSize = 100; 
 
-let rectX = 800;
-let rectY = 100;
+let pos = [[800, 100], [900, 100], [1000, 100], [800, 200], [900, 200], [1000, 200], [800, 300], [900, 300], [1000, 300]];
+let cursor = 0;
 
 //Arduino connection variables
 let port; 
 let connectBtn;
 let myVal = 0;
 
+//save button and name input
 let solvedBtn;
 let input;
 let msg;
 
+//saving canvas
 let myCanvas, savedImg;
 
 let mazes = [];
@@ -54,9 +56,6 @@ for (let i = 0; i < 9; i++) {
     pieces[i].maze = i;
     pieces[i].x = random(50, 400);
     pieces[i].y = random(50, 400);
-    // pieces[i].r = random(255);
-    // pieces[i].g = random(255);
-    // pieces[i].b = random(255);
 }
 }
 
@@ -76,25 +75,8 @@ function draw() {
  // the square that marks the space of the grid
   fill(0);
   noStroke();
-  rect(rectX, rectY, colSize, rowSize);
+  rect(pos[cursor][0], pos[cursor][1], colSize, rowSize);
 
-  //make sure the marking is staying within the grid
-  if (rectX == 1100) {
-    rectX = 800;
-    rectY += rowSize;
-  } 
-  if (rectX == 700) {
-    rectX = 1000;
-    rectY -= rowSize;
-  }
-  if (rectY == 400) {
-    rectY = 100;
-    rectX = 800;
-  }
-  if (rectY == 0) {
-    rectY = 300;
-    rectX = 1000;
-  }
 
   //displaying puzzle pieces
   for(let i = 0; i < pieces.length; i++) {
@@ -109,8 +91,8 @@ function draw() {
 
     for(let pieceX = 0; pieceX < pieces.length; pieceX++) {
       if (myVal == pieceX) {
-        pieces[pieceX].x = rectX;
-        pieces[pieceX].y = rectY;
+        pieces[pieceX].x = pos[cursor][0];
+        pieces[pieceX].y = pos[cursor][1];
       } else if (myVal == 9) {
         pieces[pieceX].x = random(50, 400);
         pieces[pieceX].y = random(50, 400);
@@ -118,13 +100,18 @@ function draw() {
     }
 
     // cursor moving
-    if(myVal == 10) {
-      rectX += colSize;
-    } else if(myVal == 11) {
-      rectX -= colSize;
-    }
-  }  
-
+        if(myVal == 10) {
+          cursor++;
+          if (cursor == 9) {
+            cursor = 0;
+          }
+        } else if (myVal == 11) {
+          cursor--;
+          if (cursor < 0) {
+            cursor = 8;
+          }
+        }
+  }
 }
 
 class Piece {
@@ -132,16 +119,8 @@ class Piece {
     this.x = 200;
     this.y = 150;
     this.maze = 0;
-    // this.r = 220;
-    // this.g = 220;
-    // this.b = 220;
   }
   show() {
-    // stroke(this.r, this.g, this.b);
-    // // strokeWeight(2);
-    // noStroke();
-    // fill(this.r, this.g, this.b);
-    // rect(this.x, this.y, 100, 100);
     image(mazes[this.maze], this.x, this.y, 100, 100);
   }
 }
