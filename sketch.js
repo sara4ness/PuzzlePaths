@@ -1,9 +1,9 @@
 let pieces = [];
 
 let columns = 3; let rows = 3;
-let colSize = 100; let rowSize = 100; 
+let colSize = 200; let rowSize = 200; 
 
-let pos = [[800, 100], [900, 100], [1000, 100], [800, 200], [900, 200], [1000, 200], [800, 300], [900, 300], [1000, 300]];
+let pos = [[1000, 200], [1200, 200], [1400, 200], [1000, 400], [1200,400], [1400, 400], [1000, 600], [1200, 600], [1400, 600]];
 let cursor = 0;
 
 //Arduino connection variables
@@ -30,7 +30,7 @@ for (let i = 0; i < 9; i++) {
 
 
 function setup() {
-  myCanvas = createCanvas(1120, 600);
+  myCanvas = createCanvas(windowWidth, windowHeight);
 
   //Connect button for Arduino
   port = createSerial();
@@ -48,14 +48,14 @@ function setup() {
 
   //name field for saving
   input = createInput('Name');
-  input.position(800,height - 40 )
+  input.position(width - 260, height - 40 )
 
   //making puzzzle pieces and giving them random positions
 for (let i = 0; i < 9; i++) {
     pieces[i] = new Piece();
     pieces[i].maze = i;
-    pieces[i].x = random(50, 400);
-    pieces[i].y = random(50, 400);
+    pieces[i].x = random(50, 700);
+    pieces[i].y = random(50, 800);
 }
 }
 
@@ -68,7 +68,7 @@ function draw() {
       stroke(255)
       strokeWeight(4);
       fill(255)
-      rect(800 + i * colSize, 100 + j * rowSize, colSize, rowSize);
+      rect(1000 + i * colSize, 200 + j * rowSize, colSize, rowSize);
     }
   } 
   
@@ -94,8 +94,8 @@ function draw() {
         pieces[pieceX].x = pos[cursor][0];
         pieces[pieceX].y = pos[cursor][1];
       } else if (myVal == 9) {
-        pieces[pieceX].x = random(50, 400);
-        pieces[pieceX].y = random(50, 400);
+        pieces[pieceX].x = random(50, 700);
+        pieces[pieceX].y = random(50, 800);
       }
     }
 
@@ -121,7 +121,7 @@ class Piece {
     this.maze = 0;
   }
   show() {
-    image(mazes[this.maze], this.x, this.y, 100, 100);
+    image(mazes[this.maze], this.x, this.y, 200, 200);
   }
 }
 
@@ -135,6 +135,6 @@ function connectBtnClick() {
 
 function solvedBtnClick() {
   let msg = input.value();
-  savedImg = myCanvas.get(780, 80, 340, 340);
+  savedImg = myCanvas.get(980, 180, 640, 640);
   savedImg.save(msg, 'png');
 }
